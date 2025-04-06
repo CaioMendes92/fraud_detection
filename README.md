@@ -5,18 +5,18 @@
 # 1. Entendimento de Negócio
 
 ### **Objetivo**
-O problema a ser resolvido envolve a identificação de transações fraudulentas. Atualmente, todas as transações são consideradas legítimas, resultando em perdas financeiras significativas para a empresa. Nosso objetivo é construir um modelo escalável, econômico e robusto para detectar essas fraudes.
+Com o aumento das transações eletrônicas em pontos de venda físicos, o uso de cartões de crédito tornou-se essencial no cotidiano. No entanto, essa facilidade também trouxe um aumento nas fraudes, incluindo transações fraudulentas em terminais físicos comprometidos e ataques direcionados a esses locais.
+Fraudes em terminais físicos prejudicam financeiramente as instituições e afetam a confiança dos consumidores, além de impactar negativamente a reputação das empresas envolvidas. Por isso, enfretamos uma demanda crescente por soluções automatizadas que possam examinar rapidamente grandes volumes de transações e identificar padrões de fraude em terminais físicos.
+
+**Objetivo**: 
+Neste Case, o objetivo é desenvolver um modelo de machine learning para detecção de fraudes em cartões de crédito, focado exclusivamente em transações realizadas em terminais físicos.
 
 Como não há um modelo prévio de detecção de fraude, todas as fraudes são contabilizadas como perdas. Assim, o baseline inicial será definido como:
 
+$\text{total perdido}$ = $\text{total fraud}$
 
-$$\text{total perdido} = \text{total fraude}$$
-
-
-onde:
-
-- **total fraude** = soma de todos os valores de transações classificadas como fraudulentas.
-
+sendo: 
+- $\text{total fraud}$ = soma de todos os valores das transações consideradas fraude no periodo avaliado
 
 Nosso objetivo é construir um modelo onde:
 
@@ -58,7 +58,7 @@ Criar features robustas e eliminar informações desnecessárias para melhorar a
     - Engenharia de features para criar novas variáveis.
     - Testar a exclusão e adição de novas features para treinar novamente o modelo.
 - **Ciclo 03:**
-    - Realizar **cross-validation** considerando a variável `datetime` para separar treino e teste.
+    - Realizar **cross-validation**.
     - Ajustar hiperparâmetros em conjunto com a **cross-validation**.
     - Selecionar o melhor modelo para produção.
 
@@ -74,6 +74,17 @@ Construir modelos preditivos e avaliar performance.
 - Calcular AUC-ROC, Recall, Precision, F1-Score.
 - Analisar Feature Importance para identificar possíveis redundâncias.
 
+### Ciclo 02:
+- Criar a RF, XGBoost e LightGBM com todas as features novas.
+- Calcular AUC-ROC, Recall, Precision, F1-Score.
+- Avaliar o total perdido
+- Fazer um feature importance e encontrar as melhores variáveis
+
+### Ciclo 03:
+- Criar a XGBoost e LightGBM com as melhores features
+- Fazer Cross-Validation e Tunagem dos hiper parâmetros para encontrar os melhores hiperparâmetros.
+- Calcular AUC-ROC, Recall, Precision, F1-Score.
+- Avaliar o total perdido
 ---
 
 # 5. Avaliação
@@ -92,40 +103,37 @@ A avaliação será feita comparando as perdas do modelo com a matriz de confus�
 
 ---
 
-## 6. Performance dos Modelos de Machine Learning (Em progresso!)
-![alt text](https://github.com/CaioMendes92/fraud_detection/blob/main/imgs/modelo_ml_ciclo02.png)
+## 6. Performance dos Modelos de Machine Learning
+![alt text](https://github.com/CaioMendes92/fraud_detection/blob/main/imgs/classificacao_ciclo03.png)
 
-Os resultados demonstram que o **XGBoost** apresentou o melhor desempenho geral, obtendo **AUC-ROC, Precision e F1-score superiores**.  
+Os modelos estão com desempenhos bastante similares.
 
-A **AUC-ROC mais alta** no conjunto de testes indica uma boa separação entre classes fraudulentas e legítimas.
+- AUC-ROC (0.723 e 0.722) indica uma boa separação entre transações legítimas e fraudulentas. Com melhorias na engenharia de features ou no balanceamento das classes, é possível obter resultados ainda melhores.
+- O recall é relativamente baixo, ou seja, os modelos estão deixando passar mais de 65% das fraudes.
+- A precision é bastante alta: os modelos quase não erram falsos positivos (ou seja, poucas transações legítimas estão sendo classificadas como fraude), acertando mais de 90%.
+- O melhor F1-Score (~0.50) demonstra um equilíbrio razoável entre precision e recall. Neste caso, optamos por privilegiar a experiência do cliente — preferimos aceitar o risco de uma fraude passar despercebida a barrar uma transação legítima.
 
-Dessa forma, o XGBoost foi escolhido como referência para a construção da matriz de confusão:
-
-![alt text](https://github.com/CaioMendes92/fraud_detection/blob/main/imgs/matriz_confusao_ciclo02.png)
-
-**Análise da matriz de confusão**:
-- **Baixa taxa de falsos positivos (0,17%)**: O modelo raramente classifica uma transação legítima como fraude, reduzindo o impacto para clientes legítimos.
-- **Alta taxa de falsos negativos (78,70%)**: O modelo não detecta a maioria das fraudes, identificando corretamente apenas **21,30% das transações fraudulentas**.
+Dentre os modelos avaliados, o **LightGBM** presentou o melhor desempenho geral, com **AUC-ROC, Precision e F1-score superiores**. Entretanto, devido à proximidade dos resultados e aos desvios observados, pode-se considerar um empate técnico entre os dois modelos avaliados.
 
 ---
 
-# 7. Tradução do Erro em Métricas de Negócio (Em progresso!)
-A métrica principal será o **prejuízo final** causado por fraudes não detectadas (falsos negativos) e pelos falsos positivos (transações legítimas classificadas erroneamente como fraude).
+# 7. Tradução do Erro em Métricas de Negócio
+A principal métrica de negócio considerada é o **prejuízo final**, causado por fraudes não detectadas (falsos negativos) e por falsos positivos (transações legítimas classificadas erroneamente como fraude).
 
-![alt text](https://github.com/CaioMendes92/fraud_detection/blob/main/imgs/classificacao_ciclo02.png)
+![alt text](https://github.com/CaioMendes92/fraud_detection/blob/main/imgs/prejuizo_final.png)
 
-Houve uma redução no custo geral, mas a melhoria entre o **Ciclo 1 e Ciclo 2** foi pequena. No entanto, no **Ciclo 2**, realizamos engenharia de features, diminuindo a dependência do modelo em relação a algumas variáveis, tornando-o mais robusto.
+Ao longo dos ciclos, observamos uma redução significativa dos custos com fraudes. Já no ciclo 01, utilizando apenas as variáveis do modelo base, obtivemos uma redução de aproximadamente 60% nas perdas, representando uma economia de quase R$ 200 mil. 
+No ciclo 02, após a aplicação de engenharia de features, a redução foi ainda maior — ultrapassando R$ 300 mil. 
+Por fim, no ciclo 03, com seleção de variáveis e ajuste dos melhores hiperparâmetros, alcançamos uma redução total de **77% no custo inicial**, passando de `R$ 411.671,78` para apenas `R$ 94.039,41`.
 
 **Observação:**  
-- O **XGBoost** teve métricas de performance melhores.  
-- O **LightGBM** apresentou **melhor resultado financeiro**, possivelmente porque funciona melhor para transações de valores mais altos, enquanto o XGBoost tem melhor desempenho para valores menores.
+- No futuro, poderá ser interessante reavaliar os modelos com novas variáveis e outros parâmetros, a fim de determinar qual deles apresenta, de fato, a melhor performance. Atualmente, os resultados indicam um empate técnico.
 
 # 8. Próximos Passos (Em progresso!)
-- **Realizar uma cross-validation** com **Random Forest, XGBoost e LightGBM** para definir o modelo ideal.
-- **Ajuste fino de hiperparâmetros** para otimizar os resultados.
-- **Iniciar o processo de deploy** do modelo escolhido.
-
+- **Construir um book de variáveis no S3 da AWS**
+- **Integração dos dados via AWS Athena**
+- **Início do processo de deploy** do modelo selecionado.
 ---
 
 ### **Considerações Finais**
-Este projeto utiliza a metodologia **CRISP-DM** para garantir uma abordagem estruturada na modelagem de detecção de fraudes. A avaliação contínua e a otimização do modelo são essenciais para reduzir as perdas financeiras e aprimorar a eficácia da detecção.
+Este projeto segue a metodologia CRISP-DM, garantindo uma abordagem estruturada e iterativa para o desenvolvimento de modelos de detecção de fraudes. A avaliação contínua e a otimização do modelo são fundamentais para minimizar perdas financeiras e aumentar a eficácia da detecção.
