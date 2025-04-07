@@ -1,0 +1,12 @@
+{
+  "XGBoost": {
+    "custo_com_modelo": 94039.41,
+    "economia_vs_baseline": 317632.37,
+    "redução_percentual": 77.16
+  },
+  "LightGBM": {
+    "custo_com_modelo": 92662.05,
+    "economia_vs_baseline": 319009.73,
+    "redução_percentual": 77.49
+  }
+}

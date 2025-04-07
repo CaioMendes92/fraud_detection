@@ -1,0 +1,16 @@
+{
+  "XGBoost": {
+    "baseline_sem_modelo": 411671.78,
+    "ciclo_01": 286230.3,
+    "ciclo_02": 138112.33,
+    "ciclo_atual": 94039.41,
+    "reducao_percentual": "77,16%"
+  },
+  "LightGBM": {
+    "baseline_sem_modelo": 411671.78,
+    "ciclo_01": 286230.3,
+    "ciclo_02": 131316.99,
+    "ciclo_atual": 92662.05,
+    "reducao_percentual": "77,49%"
+  }
+}
