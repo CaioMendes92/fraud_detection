@@ -1,0 +1,34 @@
+{
+  "XGBoost": {
+    "threshold": 0.3,
+    "auc_roc_media": 0.723885,
+    "auc_roc_desvio": 0.005926,
+    "precision_media": 0.918201,
+    "precision_desvio": 0.013473,
+    "recall_media": 0.34689,
+    "recall_desvio": 0.010896,
+    "f1_score_media": 0.503436,
+    "f1_score_desvio": 0.01196,
+    "perda_total_media": 94039.414,
+    "perda_total_desvio": 1917.60402,
+    "versao_features": "v3",
+    "ciclo": "03",
+    "_figura_associada": "classificacao_ciclo03.png"
+  },
+  "LightGBM": {
+    "threshold": 0.3,
+    "auc_roc_media": 0.722663,
+    "auc_roc_desvio": 0.004795,
+    "precision_media": 0.927474,
+    "precision_desvio": 0.012647,
+    "recall_media": 0.345763,
+    "recall_desvio": 0.010545,
+    "f1_score_media": 0.503694,
+    "f1_score_desvio": 0.012857,
+    "perda_total_media": 92662.056,
+    "perda_total_desvio": 1642.488489,
+    "versao_features": "v3",
+    "ciclo": "03",
+    "_figura_associada": "classificacao_ciclo03.png"
+  }
+}
