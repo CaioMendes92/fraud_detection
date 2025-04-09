@@ -91,7 +91,7 @@
       "descricao": "Periodo da transação (Manhã, tarde, noite ou madrugada)",
       "tipo": "float",
       "fonte": "temporal",
-      "grupo": "não categorizado",
+      "grupo": "temporal",
       "status": "inativa",
       "in_model": false
     },
