@@ -20,9 +20,10 @@ sendo:
 total fraud = soma de todos os valores das transações consideradas fraude no periodo avaliado
 Nosso objetivo é construir um modelo onde:
 
-total modelo < total fraude
+total modelo < total fraude,
 
 ou seja, reduzir o prejuízo financeiro causado por transações fraudulentas.
+
 ---
 
 ## 2. Arquitetura do Pipeline
