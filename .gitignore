@@ -3,6 +3,7 @@
 .venv
 env/
 venv/
+.venv_clean/
 ENV/
 env.bak/
 venv.bak/
@@ -25,3 +26,4 @@ Thumbs.db
 
 # VSCode configs
 .vscode/
+
