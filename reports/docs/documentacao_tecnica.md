@@ -143,6 +143,7 @@ Saída esperada:
 
 - [ ] Modularizar `FeatureBuilder` com base nos grupos
 - [ ] Implementar logs estruturados
+- [ ] Criar testes unitários para garantir a robustes do projeto
 - [ ] Subir o código para AWS
 - [ ] Criar API REST com FastAPI
 - [ ] Deploy com versionamento via MLflow ou DVC
