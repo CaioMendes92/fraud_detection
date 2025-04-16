@@ -85,6 +85,7 @@ Construir modelos preditivos e avaliar performance.
 - Fazer Cross-Validation e Tunagem dos hiper parâmetros para encontrar os melhores hiperparâmetros.
 - Calcular AUC-ROC, Recall, Precision, F1-Score.
 - Avaliar o total perdido
+  
 ---
 
 # 5. Avaliação
@@ -129,10 +130,54 @@ Por fim, no ciclo 03, com seleção de variáveis e ajuste dos melhores hiperpar
 **Observação:**  
 - No futuro, poderá ser interessante reavaliar os modelos com novas variáveis e outros parâmetros, a fim de determinar qual deles apresenta, de fato, a melhor performance. Atualmente, os resultados indicam um empate técnico.
 
-# 8. Próximos Passos (Em progresso!)
-- **Construir um book de variáveis no S3 da AWS**
-- **Integração dos dados via AWS Athena**
-- **Início do processo de deploy** do modelo selecionado.
+---
+
+# 9. Deploy (Em progresso!)
+
+![alt text](https://github.com/CaioMendes92/fraud_detection/blob/main/imgs/fluxo_aws_apenas_imagem.drawio.png)
+
+O deploy e todo o pipeline está sendo construído na AWS. De forma a reduzir o máximo possível dos custos, algumas etapas menos ortodoxas serão adotadas. Por exmeplo, não é recomendável utilizar o S3 conectado diretamente a uma API de transação, uma vez que os custos do S3 são por acesso (adicionar, remover, mover arquivos dentro dele, etc). Porém, como a ideia é construir um modelo para o portfólio, não haverão muitas transações.  O pipeline completo consiste em duas etapas: Recebimento e Engenharia de Features e Filtragem, Predição e Armazenamento.
+
+### **Etapa 01: Recebimento e Engenharia de Features**
+1. API Gateway recebe a transação.
+
+2. Lambda 1:
+
+    - Salva transação como CSV em s3://fraude-transacoes/raw/
+    - Se inválida, salva em s3://fraude-transacoes/quarentena/
+    - Salva logs em s3://fraude-transacoes/logs/lambda/
+    - Dispara alerta via SNS em caso de erro
+    - Dispara o cluster EMR para feature engineering
+
+3. EMR 1:
+
+    - Executa feature engineering com base no feature_book
+    - Salva resultado em Parquet, no bucket s3://fraude-transacoes/parquet-intermediario/ (modo overwrite)
+
+### **Etapa 02: Filtragem, Predição e Armazenamento**
+
+1. Athena:
+
+    - Lê arquivos Parquet do bucket intermediário
+    - Consulta JSON do feature_book para filtrar "in_model": true
+
+2. Lambda 2:
+
+    - Instancia EMR 2 para realizar:
+        - Filtragem das features
+        - Predição: "Transação Autorizada" ou "Transação Negada"
+
+3. API Gateway retorna o resultado da predição
+
+4. EMR 2 gera dois Parquets:
+
+    - Com todas as features → s3://fraude-transacoes/historico-completo/
+    - Com features do modelo → s3://fraude-transacoes/historico-modelo/
+
+5. Logs da execução são salvos em s3://fraude-transacoes/logs/emr/
+
+# 10. Próximos Passos
+- **Finalizar o deploy do modelo, configurando tudo via AWS**
 ---
 
 ### **Considerações Finais**
